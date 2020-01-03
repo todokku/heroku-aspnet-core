@@ -2,17 +2,18 @@ FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 WORKDIR /app
 
 # copy csproj and restore as distinct layers
-COPY heroku-aspnet-core/*.sln .
-COPY heroku-aspnet-core/*.csproj ./heroku-aspnet-core/
+COPY *.sln ./aspnetapp/
+COPY *.csproj ./aspnetapp/
+WORKDIR /app/aspnetapp
 RUN dotnet restore
 
 # copy everything else and build app
-COPY heroku-aspnet-core/. ./heroku-aspnet-core/
-WORKDIR /app/heroku-aspnet-core
-RUN dotnet publish -c Release -o out
+COPY aspnetapp/. ./aspnetapp/
+WORKDIR /app/aspnetapp
+RUN dotnet publish -c Release -o published
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
-COPY --from=build /app/heroku-aspnet-core/out ./
+COPY --from=build /app/aspnetapp/published ./
 ENTRYPOINT ["dotnet", "heroku-aspnet-core.dll"]
