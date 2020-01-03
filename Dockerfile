@@ -8,7 +8,7 @@ WORKDIR /app/aspnetapp
 RUN dotnet restore
 RUN dotnet publish -c Release -o published
 
-FROM microsoft/aspnetcore:2.2.0 AS runtime
+FROM microsoft/aspnetcore:2.2 AS runtime
 WORKDIR /app
 COPY --from=build /app/aspnetapp/published ./
 ENTRYPOINT ["dotnet", "heroku-aspnet-core.dll"]
