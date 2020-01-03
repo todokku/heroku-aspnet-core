@@ -8,12 +8,12 @@ WORKDIR /app/aspnetapp
 RUN dotnet restore
 
 # copy everything else and build app
-COPY aspnetapp/. ./aspnetapp/
+COPY /app/aspnetapp/. ./app/aspnetapp/
 WORKDIR /app/aspnetapp
-RUN dotnet publish -c Release -o out
+RUN dotnet publish -c Release -o published
 
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS runtime
 WORKDIR /app
-COPY --from=build /app/aspnetapp/out ./
+COPY --from=build /app/aspnetapp/published ./
 ENTRYPOINT ["dotnet", "heroku-aspnet-core.dll"]
