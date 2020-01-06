@@ -1,0 +1,33 @@
+language: bash
+services:
+  - docker
+
+notifications:
+  email:
+    recipients:
+      - 875974254@qq.com
+      - qinyuanpei@163.com
+    on_success: change # default: change
+    on_failure: always # default: always
+
+before_script:
+  - echo docker -v
+
+script:
+  - echo "Build Images Via Dockerfile"
+
+after_success:
+  - docker build -t aspnetapp -f Dockerfile .
+  - docker login --username=$HEROKU_USERNAME --password=$HEROKU_API_KEY registry.heroku.com
+  - docker tag aspnetapp registry.heroku.com/$HEROKU_APP_NAME/web
+  - docker push registry.heroku.com/$HEROKU_APP_NAME/web                
+  - curl https://cli-assets.heroku.com/install.sh | sh
+  - heroku container:release web -a $HEROKU_APP_NAME
+
+addons:
+  apt:
+    update: true
+
+branches:
+  only:
+    - master
