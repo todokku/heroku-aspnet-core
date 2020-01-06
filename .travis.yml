@@ -11,7 +11,7 @@ notifications:
     on_failure: always # default: always
 
 before_script:
-  - echo docker -v
+  - docker -v
 
 script:
   - echo "Build Images Via Dockerfile"
