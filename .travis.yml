@@ -22,7 +22,7 @@ after_success:
   - docker tag aspnetapp registry.heroku.com/${HEROKU_APP_NAME}/web
   - docker push registry.heroku.com/${HEROKU_APP_NAME}/web                
   - curl https://cli-assets.heroku.com/install.sh | sh
-  - heroku container:push release
+  - heroku container:push release -a ${HEROKU_APP_NAME}
   - heroku container:release web -a ${HEROKU_APP_NAME}
 
 addons:
